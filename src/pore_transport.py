@@ -16,15 +16,26 @@
 # %% [markdown]
 # # Fit Pore Transport Parameters
 #
-# Pore transport is an important consideration in the modeling of chromatography. The speed in which a tracer is able to pass through the column is dependent on its interaction with the stationary phase. The `particle_porosity` is a chemical property of the beads in the stationary phase. The tracer in the mobile phase must be able to penetrate the pores to interact with the stationary phase. This external mass transfer between bulk volume and particles pores is called `film diffusion`. After entering the pore the tracer is considered to be in the stagnant mobile phase.
+# Pore transport is an important consideration in the modeling of chromatography.
+# The speed in which a tracer is able to pass through the column is dependent on its interaction with the stationary phase.
+# The `particle_porosity` is a property of the beads in the stationary phase.
+# The tracer in the mobile phase must be able to penetrate the pores to interact with the stationary phase.
+# This external mass transfer between bulk volume and particles pores is called `film diffusion`.
+# After entering the pore the tracer is considered to be in the stagnant mobile phase.
 #
-# One approach to determine parameters like `particle_porosity` and `film diffusion` is the inverse method. By adjusting the values of the parameters in the simulation model and comparing the resulting behavior to the experimental data, the optimal parameter values that match the observed behavior can be found.
+# One approach to determine parameters like `particle_porosity` and `film diffusion` is the inverse method.
+# By adjusting the values of the parameters in the simulation model and comparing the resulting behavior to the experimental data, the optimal parameter values that match the observed behavior can be found.
 #
 # ## Experiment
 #
-# To fit the pore transport parameters an experiment is conducted with acetone as a pore penetrating tracer. The tracer is injected into the column and its concentration at the column outlet is measured and compared to the concentration predicted by simulation results.
-# - Acetone (pore penetrating tracer './experimental_data/pore_penetrating_tracer.csv')
-# - data: time / s and c / mM
+# To fit the pore transport parameters an experiment is conducted with a pore-penetrating tracer.
+# The tracer is injected into the column and its concentration at the column outlet is measured.
+#
+# In this example, acetone is used as a non-binding, pore-penetrating tracer for a hypothetical ion exchange column.
+# This is useful if the column is to be used to separate small molecules.
+# If the target molecules are large molecules, such as proteins, it can be advisable to perform the pore-penetrating tracer experiment using the target proteins under non-binding conditions, such as with a buffer with a high salt concentration for ion exchange chromatography.
+#
+# The acetone data is stored in './experimental_data/pore_penetrating_tracer.csv' as time in seconds and concentration in mM.
 
 # %%
 import numpy as np
@@ -44,8 +55,7 @@ if __name__ == "__main__":
 # %% [markdown]
 # ## Reference Model
 #
-# Here, initial values for `axial_dispersion` and `bed_porosity` are assumed. The optimization of these parameters can be performed with the simulation of a non-pore-penetrating tracer as described in [Fit Column Transport Parameters] (./column_transport_parameters.md) .
-# The `particle_porosity` and  `film_diffusion`  will later be optimized, thus arbitrary values can be set for now. `film_diffusion` is set to a value > 0 m/s to allow for the tracer to enter the pores. In the `LumpedRateModelWithPores` pore diffusion is neglegted. The only mass transport inside the particle considered is the `film diffusion`.
+# Here, initial values for `film_diffusion` and `particle_porosity` are assumed, as they will later be optimized, thus arbitrary values can be set for now. `film_diffusion` is set to a value > 0 m/s to allow for the tracer to enter the pores. In the `LumpedRateModelWithPores` pore diffusion is neglegted. The only mass transport inside the particle considered is the `film diffusion`.
 
 # %%
 from CADETProcess.processModel import ComponentSystem
@@ -70,8 +80,8 @@ column.particle_radius = 34e-6
 column.axial_dispersion = 1e-8
 column.bed_porosity = 0.3
 
-column.particle_porosity = 0.8
-column.film_diffusion = [1]
+column.particle_porosity = 0.95
+column.film_diffusion = [2e-5]
 
 outlet = Outlet(component_system, name="outlet")
 
@@ -135,7 +145,7 @@ comparator.add_difference_metric(
 )
 
 if __name__ == "__main__":
-    comparator.plot_comparison(simulation_results, x_axis_in_minutes=False)
+    comparator.plot_comparison(simulation_results)
 
 # %% [markdown]
 # ## Optimization Problem
@@ -157,8 +167,8 @@ optimization_problem.add_variable(
 optimization_problem.add_variable(
     name="film_diffusion",
     parameter_path="flow_sheet.column.film_diffusion",
-    lb=0.001,
-    ub=0.99,
+    lb=1e-6,
+    ub=1e-2,
     transform="auto",
 )
 
@@ -186,9 +196,9 @@ optimization_problem.add_callback(callback, requires=[simulator])
 from CADETProcess.optimization import U_NSGA3
 
 optimizer = U_NSGA3()
-optimizer.n_max_gen = 3
-optimizer.pop_size = 3
-optimizer.n_cores = 3
+optimizer.n_max_gen = 10
+optimizer.pop_size = 30
+optimizer.n_cores = 10
 
 # %% [markdown]
 # ## Run Optimization
@@ -224,3 +234,5 @@ optimization_results.plot_objectives()
 # - The `results_all.csv` file contains information about all evaluated individuals.
 # - The `results_last.csv` file contains information about the last generation of evaluated individuals.
 # - The `results_pareto.csv` file contains only the best individual(s).
+
+# %%
