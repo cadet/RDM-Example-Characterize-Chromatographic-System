@@ -136,31 +136,31 @@ def create_output(root_path: Path, output_path: Path, n_cores=1):
     shutil.copytree(root_path, output_path)
 
     # Find all myst files recursively
-    myst_files = list(output_path.glob("**/*.py"))
+    python_files = list(output_path.glob("**/*.py"))
 
     # Filter out checkpoints
-    myst_files = [
-        file for file in myst_files if (".ipynb_checkpoints" not in file.as_posix())
+    python_files = [
+        file for file in python_files if (".ipynb_checkpoints" not in file.as_posix())
     ]
 
     # Filter out python files that are not marked for jupytext conversion
-    myst_files = remove_non_jupytext_files(myst_files)
+    python_files = remove_non_jupytext_files(python_files)
 
     # Make ipynbs
-    ipynb_files = [file.with_suffix(".ipynb") for file in myst_files]
+    ipynb_files = [file.with_suffix(".ipynb") for file in python_files]
 
     # Run jupytext for each myst file
     run_func_over_args_list(
-        func=convert_myst_to_ipynb,
+        func=convert_python_to_ipynb,
         args_list=[
-            (myst_path.as_posix(), ipynb_path.as_posix())
-            for myst_path, ipynb_path in zip(myst_files, ipynb_files)
+            (python_path.as_posix(), ipynb_path.as_posix())
+            for python_path, ipynb_path in zip(python_files, ipynb_files)
         ],
         n_cores=n_cores,
     )
 
 
-def convert_myst_to_ipynb(myst_file_path, ipynb_file_path):
+def convert_python_to_ipynb(myst_file_path, ipynb_file_path):
     """Run jupytext with --output ipynb flag on myst_file_path. Will skip README files.
     Will run the jupyter notebooks.
 
