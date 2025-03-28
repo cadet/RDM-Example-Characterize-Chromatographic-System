@@ -34,7 +34,7 @@ sys.path.append(root_dir.as_posix())
 # Axial dispersion is a transport parameter that describes the spreading of a solute or tracer as it moves through a chromatographic system column along the length of the column.
 # It occurs due to differences in velocity between different layers of the fluid, leading to radial mixing of the fluid and the solutes.
 #
-# To determine the value of these parameters, an experiment is conducted using a non-pore-penetrating tracer.
+# To determine the value of these parameters, an experiment is conducted using a non-pore-penetrating, non-binding tracer.
 # The tracer is injected into the column and its concentration at the column outlet is measured and compared to the concentration predicted by simulation results.
 
 # %%
