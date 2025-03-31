@@ -354,9 +354,9 @@ if __name__ == "__main__":
 if __name__ == "__main__":
     from CADETProcess.optimization import U_NSGA3
 optimizer = U_NSGA3()
-optimizer.n_max_gen = 60
-optimizer.pop_size = 64
-optimizer.n_cores = -4
+optimizer.n_max_gen = 2
+optimizer.pop_size = 12
+optimizer.n_cores = 12
 
 # %% [markdown]
 # ## Run Optimization

@@ -197,9 +197,9 @@ optimization_problem.add_callback(callback, requires=[simulator])
 from CADETProcess.optimization import U_NSGA3
 
 optimizer = U_NSGA3()
-optimizer.n_max_gen = 30
-optimizer.pop_size = 32
-optimizer.n_cores = -4
+optimizer.n_max_gen = 10
+optimizer.pop_size = 12
+optimizer.n_cores = 12
 
 # %% [markdown]
 # ## Run Optimization
