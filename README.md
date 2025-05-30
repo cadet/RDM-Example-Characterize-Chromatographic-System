@@ -1,6 +1,6 @@
 # Characterization of Chromatographic Systems in CADET
 
-This repository contains example simulations demonstrating the workflow for characterizing chromatographic systems using **CADET-Process** and **CADET-RDM**. The steps required to model a chromatographic system are outlined, including how to fit the model to experimental data. The characterization of the system periphery, such as tubing and valves, is not yet included in this example. The following objectives are examined: 
+This repository contains example simulations demonstrating the workflow for characterizing chromatographic systems using **CADET-Process** and **CADET-RDM**. The steps required to model a chromatographic system are outlined, including how to fit the model to experimental data. The characterization of the system periphery, such as tubing and valves, is not yet included in this example. The following contents are covered: 
 
 * Fit Column Transport Parameters - ` column_transport_parameters.py` <br>
 A system with a non-binding, non-pore-penetrating tracer is simulated using the **Lumped Rate Model With Pores** unit operation model to optimize the parameters: **Bed porosity** and **Axial Dispersion**  
