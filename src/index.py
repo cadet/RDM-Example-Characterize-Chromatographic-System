@@ -28,7 +28,8 @@
 # ```{toctree}
 # :maxdepth: 1
 #
-# column_transport_parameters.ipynb
-# pore_transport.ipynb
-# binding_model_parameters.ipynb
+# column_transport_parameters
+# pore_transport
+# binding_model_parameters
+# Yamamoto_method
 # ```
